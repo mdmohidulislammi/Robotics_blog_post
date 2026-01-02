@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS=['https://robotics-blog-post-4.onrender.com']
+CSRF_TRUSTED_ORIGINS=['https://robotics-blog-post-1.onrender.com']
 
 SECRET_KEY=config('SECRET_KEY')
 # Application definition
