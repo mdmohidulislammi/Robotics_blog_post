@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block addPost %}
+
+<div class="min-h-screen m-auto mt-6 w-1/2 items-center rounded-xl justify-center px-4 bg-black">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+
+    <!-- Submit button -->
+    <div class="flex justify-center mt-6">
+      <button type="submit"
+              class="px-4 py-2 bg-green-400 text-black rounded-sm font-semibold hover:bg-green-600 transition">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Back To Home button centered at the end -->
+<div class="flex justify-center mt-6 mb-6">
+  <a href="{% url 'home' %}"
+     class="px-4 py-2 bg-gray-300 text-black rounded-xl font-semibold hover:bg-red-200 transition text-center">
+     Back To Home
+  </a>
+</div>
+
+{% endblock addPost %}

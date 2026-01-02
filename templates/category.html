@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block category %}
+  {% for blog in blogs %}
+    {% if forloop.first %}
+      {% if blog.category.category_name == 'Com. Modules' %}
+        <h1 class="text-center text-xl sm:text-2xl md:text-3xl font-semibold text-green-700">
+          Communication Modules
+        </h1>
+      {% else %}
+        <h1 class="text-center text-xl sm:text-2xl md:text-3xl font-semibold text-green-700">
+          {{ blog.category.category_name }}
+        </h1>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+    {% for blog in blogs %}
+      <article
+        class="flex flex-col md:flex-row gap-6 border-b border-gray-700 pb-6"
+      >
+        <!-- Blog Image -->
+        {% if blog.blog_image %}
+          <div class="flex-shrink-0 w-full md:w-1/3">
+            <img
+              src="{{ blog.blog_image.url }}"
+              alt="{{ blog.title }}"
+              class="w-full h-48 sm:h-56 md:h-40 lg:h-52 object-cover rounded-lg"
+            />
+          </div>
+        {% endif %}
+
+        <!-- Blog Content -->
+        <div class="flex-1 flex flex-col justify-between">
+          <div>
+            <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2">
+              {{ blog.title }}
+            </h2>
+            <p class="text-xs sm:text-sm text-gray-400 mb-3">
+              {{ blog.created_at|timesince }} ago | {{ blog.author.username }}
+            </p>
+            <p class="text-gray-300 text-sm sm:text-base">
+              {{ blog.short_description }}
+            </p>
+          </div>
+         <div class="flex justify-between items-center flex-wrap gap-4">
+            <a href="{% url 'post_detail' blog.id %}"
+               class="text-blue-400 hover:underline font-semibold text-sm md:text-base">
+              Continue Reading →
+            </a>
+
+            <!-- update delete  -->
+           {% if user.is_superuser %}
+            <div class="flex gap-3">
+                 <a href="{% url 'delete_post' blog.id %}" class="px-3 py-1 bg-rose-600 text-white rounded hover:bg-rose-700 text-sm">
+    Delete
+</a>
+<a href="{% url 'update_post' blog.id %}" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">
+    Update
+</a>
+            </div>
+             
+           {% endif %}
+          </div>
+        </div>
+      </article>
+    {% endfor %}
+
+    <!-- Back to Top & Home Buttons -->
+    <div class="flex flex-col sm:flex-row justify-center mt-6 gap-4 sm:gap-6">
+      <a
+        href="#"
+        class="px-4 py-2 bg-blue-300 text-black rounded-xl font-semibold hover:bg-blue-400 transition text-center"
+      >
+        Back To Top
+      </a>
+      <a href="{% url 'home' %}"
+        class="px-4 py-2 bg-gray-300 text-black rounded-xl font-semibold hover:bg-red-200 transition text-center">
+        Back To Home
+      </a>
+    </div>
+  </div>
+{% endblock category %}

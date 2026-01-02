@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block single_post %}
+<main class="max-w-5xl mx-auto px-4 py-8">
+
+  <!-- Blog Image -->
+  {% if post.blog_image %}
+    <img src="{{ post.blog_image.url }}" alt="{{ post.title }}" 
+         class="w-full h-64 sm:h-80 md:h-96 object-cover rounded-lg shadow-lg mb-6">
+  {% endif %}
+
+  <!-- Blog Title -->
+  <h1 class="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4">
+    {{ post.title }}
+  </h1>
+
+  <!-- Post Meta -->
+  <div class="text-gray-400 text-sm sm:text-base mb-6">
+    By <span class="font-semibold text-white">{{ post.author.username }}</span> | 
+    {{ post.created_at|date:"F j, Y" }} | 
+    Category: <span class="font-semibold text-white">{{ post.category.category_name }}</span>
+  </div>
+
+  <!-- Post Content -->
+  <article class="prose prose-invert max-w-full text-gray-300 leading-relaxed mb-8">
+    {{ post.blog_body|safe }}
+  </article>
+
+  <!-- Admin Actions -->
+  {% if user.is_superuser %}
+    <div class="flex gap-3 mb-8">
+      <a href="{% url 'delete_post' post.id %}" 
+         class="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 text-sm">
+        Delete
+      </a>
+      <a href="{% url 'update_post' post.id %}" 
+         class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+        Update
+      </a>
+    </div>
+  {% endif %}
+
+  <!-- Comment Form -->
+  {% if user.is_authenticated %}
+    <form method="POST" action="{% url 'add_comment' post.id %}" class="space-y-4 mb-8">
+      {% csrf_token %}
+      {{ comment_form.comment }}
+      <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+        Add Comment
+      </button>
+    </form>
+  {% endif %}
+
+  <!-- Comments List -->
+  <div class="space-y-4 mb-8">
+    <h3 class="text-xl font-semibold text-white">Comments ({{ comments|length }})</h3>
+    {% for comment in comments %}
+      <div class="bg-gray-800 p-4 rounded-lg">
+        <div class="flex justify-between text-sm text-gray-400 mb-2">
+          <span>{{ comment.created_at|date:"F j, Y" }}</span>
+          <span class="font-semibold text-white">{{ comment.user.username }}</span>
+        </div>
+        <p class="text-gray-300">{{ comment.comment }}</p>
+      </div>
+    {% empty %}
+      <p class="text-gray-400">No comments yet.</p>
+    {% endfor %}
+  </div>
+
+  <!-- React Button -->
+  {% if user.is_authenticated %}
+    <div class="flex items-center gap-3 mb-8">
+      <form method="POST" action="{% url 'react_to_post' post.id %}">
+        {% csrf_token %}
+        {% if user_has_reacted %}
+          <button type="submit" class="text-red-600 text-3xl hover:scale-110 transition">❤️</button>
+        {% else %}
+          <button type="submit" class="text-gray-400 text-3xl hover:text-red-600 hover:scale-110 transition">♡</button>
+        {% endif %}
+      </form>
+      <span class="text-gray-300 font-semibold">{{ reacts|length }} Loves</span>
+    </div>
+  {% endif %}
+
+  <!-- Back Buttons -->
+  <div class="flex flex-col sm:flex-row gap-4">
+    <a href="{% url 'posts' %}" 
+       class="px-4 py-2 bg-blue-500 text-black font-semibold rounded-lg hover:bg-blue-600 transition text-center">
+       ← Back to All Posts
+    </a>
+    <a href="{% url 'home' %}" 
+       class="px-4 py-2 bg-gray-300 text-black font-semibold rounded-lg hover:bg-red-200 transition text-center">
+       Back To Home
+    </a>
+  </div>
+
+</main>
+{% endblock single_post %}

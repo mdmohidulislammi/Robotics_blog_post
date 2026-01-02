@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block dashboard %}
+
+<!-- Messages -->
+{% if messages %}
+  <div class="max-w-7xl mx-auto px-4 mt-4 space-y-3">
+    {% for message in messages %}
+      <div
+        class="message px-4 py-3 rounded-lg text-sm font-medium
+        {% if message.tags == 'error' %}
+          bg-red-500/20 text-red-400 border border-red-500/30
+        {% elif message.tags == 'warning' %}
+          bg-yellow-500/20 text-yellow-400 border border-yellow-500/30
+        {% else %}
+          bg-blue-500/20 text-blue-400 border border-blue-500/30
+        {% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+<div class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+
+  <!-- Dashboard Header -->
+  <h1 class="text-3xl md:text-4xl font-bold text-white text-center mb-8">
+    Manager Dashboard
+  </h1>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-zinc-800 rounded-lg shadow-md p-6 text-center">
+      <p class="text-gray-400 text-sm">Total Users</p>
+      <p class="text-2xl font-bold text-white">{{ users|length }}</p>
+    </div>
+    <a href="{% url 'posts'  %}">
+
+      <div class="bg-zinc-800 rounded-lg shadow-md p-6 text-center">
+      <p class="text-gray-400 text-sm">Total Blogs</p>
+      <p class="text-2xl font-bold text-white">{{ blogs|length }}</p>
+    </div>
+    </a>
+    <div class="bg-zinc-800 rounded-lg shadow-md p-6 text-center">
+      <p class="text-gray-400 text-sm">Categories</p>
+      <p class="text-2xl font-bold text-white">{{ categories|length }}</p>
+    </div>
+  </div>
+
+  <!-- User Section -->
+  <section>
+    <h2 class="text-2xl font-bold text-white mb-6">Users</h2>
+    <div class="overflow-x-auto bg-zinc-900 rounded-lg shadow-md">
+      <table class="min-w-full text-sm text-left text-gray-300">
+        <thead class="bg-zinc-800 text-gray-200">
+          <tr>
+            <th class="px-6 py-3">ID</th>
+            <th class="px-6 py-3">Name</th>
+            <th class="px-6 py-3">Email</th>
+            <th class="px-6 py-3">Username</th>
+            <th class="px-6 py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr class="border-b border-gray-700">
+            <td class="px-6 py-3">{{ u.id }}</td>
+            <td class="px-6 py-3">{{ u.get_full_name }}</td>
+            <td class="px-6 py-3">{{ u.email }}</td>
+            <td class="px-6 py-3">{{ u.username }}</td>
+            <td class="px-6 py-3 space-x-2">
+    <!-- Update Button -->
+    <a href="{% url 'update_user' u.id %}"
+       class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm cursor-pointer">
+        Update
+            </a>
+    <!-- Delete Button -->
+    <a  href="{% url 'delete_user' u.id %}"
+       class="px-3 py-1 bg-rose-600 text-white rounded hover:bg-rose-700 text-sm cursor-pointer">
+        Delete
+    </a>
+</td>
+
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="px-6 py-3 text-center text-gray-400">No users found.</td>
+          </tr>
+          {% endfor %}
+           <a  href="{% url 'add_user' %}"
+       class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm cursor-pointer">
+        Add User
+    </a>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Blogs by Category -->
+  <section>
+    <h2 class="text-2xl font-bold text-white mb-6">Blogs by Category</h2>
+    {% for category in categories %}
+      <div class="mb-10">
+        <h3 class="text-xl font-semibold text-blue-400 mb-4">{{ category.category_name }}</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for blog in blogs %}
+            {% if blog.category.id == category.id %}
+              <article class="bg-zinc-900 rounded-lg shadow-md overflow-hidden">
+                {% if blog.blog_image %}
+                <img src="{{ blog.blog_image.url }}" alt="{{ blog.title }}" class="w-full h-40 object-cover">
+                {% endif %}
+                <div class="p-4">
+                  <h4 class="text-lg font-bold text-white mb-2">{{ blog.title }}</h4>
+                  <p class="text-sm text-gray-400 mb-2">
+                    {{ blog.created_at|timesince }} ago · {{ blog.author.username }}
+                  </p>
+                  <p class="text-gray-300 mb-4">{{ blog.short_description }}</p>
+                  <div class="flex justify-between items-center">
+                    <a href="{% url 'post_detail' blog.id %}" class="text-blue-400 hover:underline text-sm">Read More →</a>
+                    <div class="flex gap-2">
+                     
+                      <a href="{% url 'delete_post' blog.id %}" class="px-3 py-1 bg-rose-600 text-white rounded hover:bg-rose-700 text-sm">
+    Delete
+</a>
+<a href="{% url 'update_post' blog.id %}" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">
+    Update
+</a>
+
+
+                    </div>
+                  </div>
+                </div>
+              </article>
+            {% endif %}
+          {% empty %}
+            <p class="text-gray-400">No blogs in this category.</p>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </section>
+
+</div>
+
+{% endblock dashboard %}

@@ -1,0 +1,36 @@
+.blog_slogan {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+
+  width: 0;
+  border-right: 2px solid currentColor;
+
+  animation:
+    typing 5.5s steps(55, end) forwards,
+    blink .8s step-end infinite;
+  animation-iteration-count: infinite;
+  animation-delay: 0s;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to   { width: 55ch; }
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+/* Add a pause after typing */
+@keyframes typingLoop {
+  0%   { width: 0; }
+  80%  { width: 55ch; }   
+  100% { width: 55ch; }   
+}
+
+.blog_slogan {
+  animation:
+    typingLoop 11s steps(55, end) infinite,
+    blink .8s step-end infinite;
+}
