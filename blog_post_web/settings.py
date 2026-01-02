@@ -1,6 +1,7 @@
 
 from pathlib import Path
 from decouple import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,7 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS=['https://*onrender.com', 'http://127.0.0.1:8000']
 
 SECRET_KEY=config('SECRET_KEY')
 # Application definition
@@ -63,25 +65,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'blog_post_web.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'blog_db',
+#         'USER': 'postgres',
+#         'PASSWORD': 'mecp1',
+#         'HOST': 'localhost',
+#         'PORT': '5432'
 #     }
 # }
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blog_db',
-        'USER': 'postgres',
-        'PASSWORD': 'mecp1',
-        'HOST': 'localhost',
-        'PORT': '5432'
-    }
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://event_manager_db_9iby_user:xm6OtIUk69ua3fDJ9JW7vNrxcaeJydem@dpg-d559hrv5r7bs73et5c70-a.virginia-postgres.render.com/event_manager_db_9iby',
+        conn_max_age=600
+    )
 }
 
 # Password validation
