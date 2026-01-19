@@ -42,6 +42,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+     "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'blog_post_web.urls'
@@ -64,17 +65,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'blog_post_web.wsgi.application'
 
 
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'blog_db',
-#         'USER': 'postgres',
-#         'PASSWORD': 'mecp1',
-#         'HOST': 'localhost',
-#         'PORT': '5432'
-#     }
-# }
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
@@ -126,6 +116,11 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_STORAGE = (
+    "whitenoise.storage.CompressedManifestStaticFilesStorage"
+)
 #Media files configuration
 MEDIA_URL='/media/'
 MEDIA_ROOT=BASE_DIR/'media'
